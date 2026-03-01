@@ -1,11 +1,11 @@
 <?php
     session_start();
-    include("../config/database.php");
     header("Content-Type: application/json");
-    header("Access-Control-Allow-Origin: http://localhost:5173");
+    header("Access-Control-Allow-Origin: https://shoestore-mi.netlify.app");
     header("Access-Control-Allow-Credentials: true");
-    header("Access-Control-Allow-Methods: POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    include("../config/database.php");
     
     if($_SERVER["REQUEST_METHOD"] === "OPTIONS")
     {
@@ -61,8 +61,6 @@
     $product_price = $fetch_product["new_price"];
 
     // check kro product exist krta ha agr krta ha to quantity update kr do
-    // $check_sql = "SELECT id, quantity FROM cart WHERE user_id = '$user_id' AND product_id = '$product_id'";
-    // $check_query = mysqli_query($conn, $check_sql);
 
     $check_sql = $conn->prepare("SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?");
     $check_sql->bind_param("ii", $user_id, $product_id);
@@ -73,8 +71,6 @@
     {
         $row = $check_result->fetch_assoc();
         $new_quantity = $row["quantity"] + $product_quantity;
-        // $update_sql = "UPDATE cart SET quantity = '$new_quantity' WHERE user_id = '$user_id' AND product_id = '$product_id'";
-        // $update_query = mysqli_query($conn, $update_sql);
 
         $update_sql = $conn->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?");
         $update_sql->bind_param("iii", $new_quantity, $user_id, $product_id);
@@ -87,12 +83,6 @@
         ]);
         exit();
     }
-
-    // $cart_sql = "INSERT INTO `cart`
-    //                     (`user_id`, `image`, `name`, `product_id`, `quantity`, `price`) 
-    //                     VALUES 
-    //                     ('$user_id','$product_image','$product_name','$product_id','$product_quantity','$product_price')";
-    // $cart_query = mysqli_query($conn, $cart_sql);
 
     $cart_sql = $conn->prepare("INSERT INTO `cart`
                         (`user_id`, `image`, `name`, `product_id`, `quantity`, `price`) 
