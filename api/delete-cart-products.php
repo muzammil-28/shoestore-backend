@@ -35,9 +35,6 @@
     }
     $cart_id = intval($cart_data["cart_id"]);
 
-    // $cart_delete_sql = "DELETE FROM cart WHERE id ='$cart_id' AND user_id = '$user_id'";
-    // $cart_delete_query = mysqli_query($conn, $cart_delete_sql);
-
     $cart_delete_sql = $conn->prepare("DELETE FROM cart WHERE id = ? AND user_id = ?");
     $cart_delete_sql->bind_param("ii", $cart_id, $user_id);
     $cart_delete_sql->execute();
